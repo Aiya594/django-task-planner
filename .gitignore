@@ -1,0 +1,5 @@
+.venv
+task_planner/db.sqlite3
+task_planner/task_planner/__pycache__
+task_planner/planner/__pycache__
+task_planner/planner/migrations/__pycache__
