@@ -48,3 +48,12 @@ class TaskViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(task)
         return Response(serializer.data)
 
+class CommentViewSet(viewsets.ModelViewSet):
+    serializer_class=CommentSerializer
+    permission_classes=[IsAuthenticated]
+
+    def get_queryset(self):
+        return Comment.objects.filter()
+    
+    def perform_create(self, serializer):
+        return serializer.save(author=self.request.user)
