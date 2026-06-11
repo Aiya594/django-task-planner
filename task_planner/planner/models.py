@@ -5,7 +5,7 @@ from django.conf import settings
 
 
 class Project(models.Model):
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name="projects")
     title =models.CharField(max_length=255) 
     description=models.TextField()
 
@@ -24,7 +24,7 @@ class Task(models.Model):
         MEDIUM = "medium", "Medium"
         HIGH = "high", "High"
 
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE,related_name="tasks")
     title=models.CharField(max_length=255)
     description=models.TextField(blank=True)
 
@@ -43,7 +43,7 @@ class Task(models.Model):
 
 
 class Comment(models.Model):
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    author= models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE,related_name="comments")
+    author= models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name="comments")
     text =models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

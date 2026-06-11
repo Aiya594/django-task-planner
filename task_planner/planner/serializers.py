@@ -1,8 +1,10 @@
 from rest_framework import serializers 
+from django.utils import timezone
 from .models import Project,Task,Comment
 
 class ProjectSerializer(serializers.ModelSerializer):
     owner_username=serializers.ReadOnlyField(source="owner.username")
+    tasks_count=serializers.SerializerMethodField()
 
     class Meta:
         model=Project 
@@ -12,15 +14,21 @@ class ProjectSerializer(serializers.ModelSerializer):
             "title",
             "description",
             "created_at",
+            "tasks_count",
             "updated_at",
         ]
         
         read_only_fields = [
             "id",
             "owner_username",
+            "tasks_count",
             "created_at",
             "updated_at",
         ]
+
+    def get_tasks_count(self, obj):
+        return obj.tasks.count()
+
     def validate_title(self,value):
         value=value.strip()
         if len(value)<3:
@@ -51,6 +59,12 @@ class TaskSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+
+    def validate_deadline(self,value):
+        if value<timezone.now().date():
+            raise serializers.ValidationError("Deadline cannot be in the past.")
+        return value
+
     
     def validate_title(self, value):
         value = value.strip()
